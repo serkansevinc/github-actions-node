@@ -1,11 +1,11 @@
-name: Code Continious Integration
+name: Firebase Continious Deployment
 
 on:
-  pull_request:
+  push:
     branches: [ master ]
 
 jobs:
-  test_pull_request:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,5 +13,10 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
-      - run: npm test
       - run: npm run build
+      - uses: w9jds/firebase-action@v2.0.0
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
